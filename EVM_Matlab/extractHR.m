@@ -1,7 +1,37 @@
+clear all; close all; clc;
 tic
+% change these parameters
+vidNum = 3;
+withEulerianFlag = 0; %1 to do the Eulerian video magnificaiton first, 0 to use the raw data
+
+
+%% data path
+dataDir = './data';
+resultsDir = 'ResultsSIGGRAPH2012';
+
+mkdir(resultsDir);
+%% This is the Eulerian Video magnification function 
+if withEulerianFlag == 1
+fileName = [num2str(vidNum),'.MOV'];
+inFile = fullfile(dataDir,fileName);
+vidObj = VideoReader(inFile);
+fprintf('Processing %s\n', inFile);
+
+tic
+% Motion
+amplify_spatial_lpyr_temporal_butter(inFile,resultsDir,20,80, ...
+                                     0.5,10,vidObj.FrameRate, 0);
+                                 toc
+end
+%% process frames
+
 % filePath = '/Users/evachen/Library/Mobile Documents/com~apple~CloudDocs/Desktop/School/EE239AS/Papers/EVM_Matlab/ResultsSIGGRAPH2012/face-ideal-from-0.83333-to-1-alpha-50-level-4-chromAtn-1.avi';
 % filePath = '/Users/evachen/Library/Mobile Documents/com~apple~CloudDocs/Desktop/School/EE239AS/Papers/EVM_Matlab/ResultsSIGGRAPH2012/4-butter-from-0.5-to-10-alpha-20-lambda_c-80-chromAtn-0.avi';
-filePath = '/Users/evachen/Library/Mobile Documents/com~apple~CloudDocs/Desktop/School/EE239AS/Papers/EVM_Matlab/data/4.MOV';
+if withEulerianFlag == 1
+filePath = ['/Users/evachen/Documents/GitHub/239AS/EVM_Matlab/ResultsSIGGRAPH2012/',num2str(vidNum),'-butter-from-0.5-to-10-alpha-20-lambda_c-80-chromAtn-0.avi'];
+else
+    filePath = ['/Users/evachen/Documents/GitHub/239AS/EVM_Matlab/data/',num2str(vidNum),'.MOV'];
+end
 vidObj = VideoReader(filePath);
 
 vidHeight = vidObj.Height;
